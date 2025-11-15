@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gabriel — Cyber Q&A Assistant</title>
+  <style>
+    body {margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fb;color:#222;}
+    .wrap {max-width:900px;margin:30px auto;padding:20px;}
+    header {display:flex;align-items:center;gap:16px;}
+    header img {width:80px;height:80px;object-fit:contain;border-radius:10px;}
+    h1 {margin:0;font-size:26px;}
+    .card {background:white;padding:20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+    #chatBox {height:420px;overflow-y:auto;padding:12px;border:1px solid #ddd;border-radius:10px;background:white;}
+    .msg {margin-bottom:14px;}
+    .user {font-weight:bold;color:#0b63f6;}
+    .bot {font-weight:bold;color:#333;}
+    #inputRow {display:flex;gap:10px;margin-top:12px;}
+    #userInput {flex:1;padding:10px;border-radius:8px;border:1px solid #ccc;font-size:16px;}
+    .btn {padding:10px 16px;border:none;border-radius:8px;background:#0b63f6;color:white;font-weight:600;cursor:pointer;font-size:16px;}
+    .btn:hover {background:#094cc0;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <img src="David_logo.png" alt="Gabriel Logo" />
+      <div>
+        <h1>Gabriel — Cybersecurity Q&A</h1>
+        <div style="color:#555;margin-top:4px">Ask a question. Get a pre‑generated cybersecurity answer.</div>
+      </div>
+    </header>
+
+    <div class="card" style="margin-top:20px;">
+      <div id="chatBox"></div>
+
+      <div id="inputRow">
+        <input id="userInput" placeholder="Ask a cybersecurity question..." />
+        <button class="btn" onclick="sendMsg()">Ask</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Pre‑generated answer bank
+    const answers = [
+      {keywords:["phishing","fake email","scam email"], text:"Phishing is when a scammer pretends to be a trusted company to steal personal information. Never click unexpected links, and always verify the sender's real address before responding."},
+      {keywords:["password","strong password"], text:"A strong password should be long (12+ characters) and include a mix of letters, numbers, and symbols. Avoid birthdays, names, or common words."},
+      {keywords:["2fa","two factor","authentication"], text:"Two‑factor authentication adds an extra layer of protection by requiring a code in addition to your password. It blocks most unauthorized access attempts."},
+      {keywords:["link","safe link","url"], text:"Before clicking any link, hover over it to see where it really goes. If the address looks suspicious or unfamiliar, do not open it."},
+      {keywords:["social security","ssn"], text:"Your Social Security number should never be shared over email, text, or phone unless YOU initiated contact with a verified official organization."},
+      {keywords:["virus","malware","download"], text:"Only download software from trusted official websites. Random pop‑ups offering downloads are usually malware in disguise."},
+      {keywords:["wifi","public wifi","network"], text:"Public Wi‑Fi is not secure. Avoid checking banking or personal accounts while on public networks unless using a trusted VPN."},
+      {keywords:["bank","money","payment"], text:"Banks will never ask you to send money, gift cards, or transfer funds to 'verify your account.' These messages are always scams."},
+      {keywords:["update","software update"], text:"Keeping software updated is one of the easiest ways to stay safe. Updates patch security holes that hackers may exploit."},
+      {keywords:["too good","free","win"], text:"If an offer sounds too good to be true—like winning something you never entered—it is almost always a scam trying to get your information."}
+    ];
+
+    // Chat UI
+    const chatBox = document.getElementById('chatBox');
+    function addMsg(text, sender){
+      const div = document.createElement('div');
+      div.className = 'msg';
+      div.innerHTML = `<div class="${sender}">${sender === 'user' ? 'You' : 'Gabriel'}:</div><div>${text}</div>`;
+      chatBox.appendChild(div);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendMsg(){
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if(!text) return;
+      addMsg(text, 'user');
+      input.value = '';
+      respond(text);
+    }
+
+    function respond(userText){
+      const lower = userText.toLowerCase();
+      for(const a of answers){
+        if(a.keywords.some(k => lower.includes(k))){
+          addMsg(a.text, 'bot');
+          return;
+        }
+      }
+      addMsg("I'm not sure about that one, but always stay cautious online!", 'bot');
+    }
+  </script>
+</body>
+</html>
